@@ -4,7 +4,6 @@ from construct import (
     Bytes,
     Computed,
     GreedyBytes,
-    Pass,
     Struct,
     Switch,
 )
@@ -164,7 +163,9 @@ module = Struct(
     "FE_chip_version" / fe_chip_version,
     "PCB_manufacturer"
     / Switch(
-        lambda ctx: ctx.FE_chip_version, {"RD53A": pcb_manufacturer}, default=Pass
+        lambda ctx: ctx.FE_chip_version,
+        {"RD53A": EnumStr(Bytes(1), Thin=b"0", Thick=b"1")},
+        default=pcb_manufacturer,
     ),
     "number" / GreedyBytes,
 )
